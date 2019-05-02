@@ -76,6 +76,13 @@ export default {
         if (valid) {
           // 发送请求
           login(this.login).then(res => {
+            if (!res.success) {
+              this.$message({
+                message: res.message,
+                type: 'error'
+              })
+              return;
+            }
             // 登录成功
             this.$message({
               message: "登录成功",

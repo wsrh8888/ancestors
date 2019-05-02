@@ -31,19 +31,17 @@ axios.interceptors.response.use(response => {
   endLoading()
   return response
 },error=> {
-  endLoading()
-  Message.error(error.response.data)
-  
+  endLoading();
+  // Message.error(error.response.data)
   // 获取错误的状态码
   // const {status} = error
-  // console.log(error)
-  // if (status == 401) {
-    Message.error('token失效，请重新登录')
+  if (error.response.status == 401) {
+    Message.error('密码失效，请重新登录')
     // 清除token
     // console.log('ddddddd')
     localStorage.removeItem('eleToken')
     router.push('/login')
-  // }
+  }
   return Promise.reject(error)
 })
 export default axios;

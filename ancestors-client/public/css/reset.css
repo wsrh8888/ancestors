@@ -66,3 +66,17 @@ table {
   text-align: center;
   position: absolute;
 }
+
+
+.w-e-text-container {
+  height: 100% !important;
+}
+/* .w-e-menu {
+  z-index: 1000 !important;
+}
+.w-e-droplist{
+  z-index: 999999999999 !important;
+} */
+.el-select-dropdown {
+  z-index: 99999 !important;
+}

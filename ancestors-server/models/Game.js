@@ -18,6 +18,9 @@ const GameSchema = new Schema({
     author: {
       type: String
     },
+    logo: {
+      type: String
+    },
     // 版本
     versions: {
       type: String
@@ -70,6 +73,13 @@ const GameSchema = new Schema({
       default: ''
     },
   },
+  // 游戏截图
+  gameImg: [{
+    url : {
+      type: String,
+      default: ''
+    }
+  }],
   // 更新日志
   log: [{
     // 更新的名字

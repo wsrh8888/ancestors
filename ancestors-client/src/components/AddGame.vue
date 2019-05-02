@@ -14,10 +14,24 @@
           label-width="120px" 
           style="margin:10px;width:auto;"
         >
-          <el-form-item prop='name' label="游戏名字:">
-            <el-input type="name" v-model="form.name"></el-input>
+          <el-form-item prop='name' label="游戏名字:" style="margin-bottom:70px;">
+            <el-input type="name" style="width:40%;float:left;" v-model="form.name"></el-input>
+            <el-upload
+              style="width:35%;border: 1px dashed #d9d9d9;border-radius: 6px;margin-left:20px;position: absolute;right: 40px;52px;top:-80px;"
+              class="avatar-uploader"
+              action="http://127.0.0.1:8085/api/games/addlogo"
+              :show-file-list="false"
+              name="logo"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="this.form.logo" :src="this.form.logo" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
           </el-form-item>
-
+          
+          <el-form-item prop='author' label="游戏作者:">
+            <el-input type="name" v-model="form.author"></el-input>
+          </el-form-item>
           <el-form-item prop='size'  label="游戏大小:">
             <el-input type="size" v-model="form.size"></el-input>
           </el-form-item>
@@ -51,6 +65,7 @@
 
 <script>
 import {addgame} from '@/api/userHT'
+import {addlogo} from '@/api/url'
 export default {
   name: "logfound",
   props: {
@@ -93,8 +108,13 @@ export default {
         studio: '',
         prince: '',
         declaration: '',
-      }
+        logo: ''
+      },
+      addlogourl: ''
     };
+  },
+  created() {
+    this.addlogourl = addlogo
   },
   computed: {
     user(){
@@ -106,7 +126,8 @@ export default {
       this.$refs[form].validate(valid => {
         if (valid) {
           // 表单数据验证完成之后，提交数据;
-          addgame(this.user.id,this.form)
+          this.form.user_id = this.user.id
+          addgame(this.form)
             .then(res => {
               if (res) {
                 this.$message({
@@ -114,13 +135,66 @@ export default {
                   type: "success"
                 });
               }
+              this.form = {
+                name: '',
+                author: '',
+                versions: '',
+                size: '',
+                studio: '',
+                prince: '',
+                declaration: '',
+                logo: ''
+              }
               this.dialog.show = false;
               this.$emit("update");
             });
           }
       });
+    },
+    handleAvatarSuccess(res, file) {
+      this.form.logo = file.response;
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
     }
   }
 };
 </script>
-
+<style scoped>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: inline;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+  .el-form-item__content {
+    display: flex !important;
+  }
+</style>

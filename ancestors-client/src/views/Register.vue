@@ -121,13 +121,18 @@ export default {
         if (valid) {
           register(this.register)
           .then(res => {
-            if (res) {
+            if (!res.success) {
               this.$message({
-                message: '帐号注册成功',
-                type: 'success'
+                message: res.message,
+                type: 'error'
               })
-              this.$router.push("/login")
+              return;
             }
+            this.$message({
+              message: res.message,
+              type: 'success'
+            })
+            this.$router.push("/login")
           })
         } else {
           return false;

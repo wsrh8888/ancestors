@@ -17,15 +17,25 @@
       >
         <el-table-column
           type="index"
-          label="序号"
+          label=" "
           align='center'
-          width="70">
+          width="40">
         </el-table-column>
+
         <el-table-column
           prop="name"
           label="游戏名字"
           align='center'
           width="120">
+        </el-table-column>
+        <el-table-column
+          prop="logo"
+          label="LOGO"
+          align='center'
+          width="100">
+          <template slot-scope="scope" v-if="scope.row.logo">  
+            <img :src="scope.row.logo" alt="" srcset="" style="width:100%;">
+          </template>
         </el-table-column>
         <el-table-column
           prop="author"
@@ -35,27 +45,27 @@
         </el-table-column>
         <el-table-column
           prop="size"
-          label="游戏大小"
+          label="大小"
           align='center'
-          width="80"> 
+          width="70"> 
           <template slot-scope="scope">  
-            <span style="color:#00d053">+ {{ scope.row.size }}</span>
+            <span style="color:#00d053">{{ scope.row.size }}</span>
           </template>
         </el-table-column>
         <el-table-column
           prop="versions"
           label="版本"
           align='center'
-          width="80">
+          width="70">
           <template slot-scope="scope">  
-            <span style="color:#f56767">v-{{ scope.row.versions}}</span>
+            <span style="color:#f56767">{{ scope.row.versions}}</span>
           </template>
         </el-table-column>
         <el-table-column
           prop="date"
           label="更新时间"
           align='center'
-          width="120">
+          width="110">
           <template slot-scope="scope">  
             <span style="color:#4db3ff">{{ scope.row.date }}</span>
           </template>
@@ -64,7 +74,7 @@
           prop="studio"
           label="工作室"
           align='center'
-          width="130">
+          width="125">
         </el-table-column>
         <el-table-column
           prop="prince"
@@ -118,7 +128,8 @@
         </el-col>
       </el-row>
     </div>
-    <moduleName :form="form" :dialog="dialog" @update="getProfile"></moduleName>
+    <moduleName class="addgame" :form="form" :dialog="dialog" @update="getProfile"></moduleName>
+    
     <!-- 新增游戏 -->
     <AddGame :dialog="diadown" @update="getProfile"></AddGame>
   </div>
@@ -198,6 +209,7 @@ export default {
         prince: row.prince,
         declaration: row.declaration,
         name: row.name,
+        logo: row.logo
       };
     },
     // 删除游戏
@@ -268,7 +280,7 @@ export default {
 .fillcontain {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  padding: 16px 5px;
   box-sizing: border-box;
 }
 .btnRight {
@@ -282,4 +294,6 @@ export default {
   text-align: right;
   margin-top: 10px;
 }
+
+
 </style>

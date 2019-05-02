@@ -26,7 +26,7 @@ router.post('/register',(req,res) => {
   User.findOne({email: req.body.email})
     .then(user => {
       if (user) {
-        return res.status(400).json({email: '邮箱已经被注册'})
+        return res.json({success: false,message: '邮箱已经被注册'})
       } else {
         const avatar = gravatar.url(req.body.email, {
           s: '200',
@@ -40,11 +40,10 @@ router.post('/register',(req,res) => {
           avatar: avatar
         })
         newUser.save()
-         .then(user => res.json({success: true,msg:'注册成功'}))
+         .then(user => res.json({success: true,message:'注册成功'}))
          .catch(err => console.log(err))
       }
     })
-
 })
 
 /**
@@ -76,12 +75,12 @@ router.post('/login', (req,res) => {
         jwt.sign(rule, keys.secretOrKey, {expiresIn: 3600} ,(err,token) => {
           if (err) throw err;
           res.json({
-            sucess: true,
+            success: true,
             token: 'Bearer ' + token
           })
         })
       } else {
-        return res.json("密码错误")
+        return res.json({success:false,message:'密码或账号错误'})
       }
     })
 })
@@ -93,7 +92,7 @@ router.post('/login', (req,res) => {
  * access  Private
  * passport.authenticate('jwt', { session: false }),
  */
-router.get('/alls/:id',(req,res)=> {
+router.get('/alls/:id',passport.authenticate('jwt', { session: false }),(req,res)=> {
   // res.json(req.params.id)
   User.findOne({_id:req.params.id})
     .then(user => {

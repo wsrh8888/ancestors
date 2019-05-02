@@ -46,7 +46,16 @@ export default {
           children: [
             { path: "gamebasis", name: "游戏基础信息" },
             { path: "download", name: "游戏下载信息" },
-            { path: "update", name: "游戏更新信息" }]
+            { path: "update", name: "游戏更新日志" },
+            { path: "screenshot", name: "游戏截图" }]
+        },
+        {
+          icon: "fa-money",
+          name: "文章",
+          path: "article",
+          children: [
+            { path: "article", name: "图文" }
+          ]
         },
         {
           icon: "fa-asterisk",

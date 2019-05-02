@@ -1,7 +1,8 @@
 import axios from 'axios';
+import {Domain} from './url'
 import { req } from './axiosFun';
-// const Domain = 'http://www.xlmx.xyz:8085'
-const Domain = 'http://127.0.0.1:8085'
+
+
 // 注册接口(*)
 export const register = (params) => {return req('post',`${Domain}/api/users/register`,params)}
 
@@ -17,6 +18,9 @@ export const update = (data) => {return axios.post(`${Domain}/api/users/update`,
 // 删除用户接口(*)
 export const deleteUser = (params) => {return axios.delete(`${Domain}/api/users/delete/${params}`)}
 
+// 上传游戏的logo
+export const logo = (data) => {return req('post',`${Domain}/api/games/addlogo`,data)}
+
 // 获取游戏的基本信息(*)
 export const profiles = (params) => {return axios.get(`${Domain}/api/games/gamelist/${params}`)}
 
@@ -24,10 +28,10 @@ export const profiles = (params) => {return axios.get(`${Domain}/api/games/gamel
 export const deletes = (params) => {return axios.delete(`${Domain}/api/games/delete/${params}`)}
 
 // 修改游戏的基本信息(*)
-export const upbasic = (params,data) => {return req('post',`${Domain}/api/games/updatebasics/${params}`,data)}
+export const upbasic = (data) => {return req('post',`${Domain}/api/games/updatebasics/`,data)}
 
 // 增加游戏(*)
-export const addgame = (params,data) => {return req('post',`${Domain}/api/games/add/${params}`,data)}
+export const addgame = (data) => {return req('post',`${Domain}/api/games/add/`,data)}
 
 //获取游戏的下载信息列表(*)
 export const downloadlist = (params) => {return axios.get(`${Domain}/api/games/downloadlist/${params}`)}
@@ -47,9 +51,28 @@ export const updateLog = (data) => {return req('post',`${Domain}/api/games/updat
 // 删除游戏的某条更新日志(*)
 export const deleteLog = (data) => {return req('post',`${Domain}/api/games/deletelog`,data)}
 
+// 获取游戏截图
+export const gameImg = (params) => {return axios.get(`${Domain}/api/games/gameImg/${params}`)}
+
+
+export const addimg = (data) => {return req('post',`${Domain}/api/games/addimg`,data)}
+
+
+// 添加游戏截图
+export const screenshot = (data) => {return req('post',`${Domain}/api/games/screenshot`,data)}
+
+// 
+export const test = (data) => {return req('post',`${Domain}/test`,data)}
 
 
 
+// 文章接口
 
+// 获取文章
+export const articlelist = (params) => {return axios.get(`${Domain}/api/articles/all/${params}`)}
 
+//增加文章
+export const articleadd = (data) => {return  req('post',`${Domain}/api/articles/add`,data)}
 
+// 删除文章
+export const articledelete = (params) => {return axios.delete(`${Domain}/api/articles/delete/${params}`)}

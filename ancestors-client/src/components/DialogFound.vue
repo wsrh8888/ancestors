@@ -72,7 +72,7 @@ export default {
             message: "游戏大小不能为空！",
           },
           {
-            pattern: /^([0-9]+) | ([0-9]+\.[0-9]+)$/,
+            pattern: /^([0-9]+)|([0-9]+\.[0-9]+)$/,
             message: '大小为数字单位默认为G'
           }
         ],
@@ -99,7 +99,7 @@ export default {
       this.$refs[form].validate(valid => {
         if (valid) {
           // 表单数据验证完成之后，提交数据;
-          upbasic(this.form.id,this.form)
+          upbasic(this.form)
             .then(res => {
               if (res) {
                 this.$message({

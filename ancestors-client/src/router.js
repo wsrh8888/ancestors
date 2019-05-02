@@ -16,6 +16,11 @@ import Download from './views/Download.vue'
 import Update from './views/Update.vue'
 // 教程
 import Course from './views/Course.vue'
+// 游戏截图
+import Screenshot from './views/Screenshot.vue'
+
+// 文章页面
+import Article from './views/Article/Article.vue'
 Vue.use(Router)
 
 const router = new Router({
@@ -63,14 +68,35 @@ const router = new Router({
         name: 'Update',
         component: Update
       },
-      // 游戏的更新日志路由
+      // 游戏攻略
       {
         path: '/course',
         name: 'Course',
         component: Course
+      },{
+        path: '/screenshot',
+        name: 'Screenshot',
+        component: Screenshot
+      }, {
+        path: '/article',
+        name: 'Article',
+        component: Article
       }]
     },
     
+
+    // {
+    //   path: '/article',
+    //   hildren: [{
+    //     path: 'xxxx',
+    //     name: 'article',
+    //     component: Article
+    //   }]
+    // },
+    // redirect: '/article/index',
+    //   children: [{
+    //     
+    //   }]
     // 注册页面
     {
       path: '/register',

@@ -12,12 +12,11 @@ app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "*");
   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
   res.header("X-Powered-By",' 3.2.1')
-  res.header("Content-Type", "application/json;charset=utf-8");
   next();
 });
 
 /**
- * bodyParser
+ * @name bodyParser 
  * 请求的中间件.解析post
  */ 
 // parse application/x-www-form-urlencoded
@@ -26,19 +25,36 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
+app.post('/test', (req,res) => {
+  res.json(req.body)
+})
+
+
 /**
- * 使用路由。来设置接口
+ * @name 使用路由。来设置接口
  * 
  */
 const users = require("./routers/api/user")
 const games = require("./routers/api/game")
-
+const gamebasic = require('./routers/api/game/basic')
+const gameImg = require('./routers/api/game/gameImg')
+const gameinstall = require('./routers/api/game/install')
+const gamelog = require('./routers/api/game/log')
+const types = require('./routers/api/type')
+const articles = require('./routers/api/article')
 /**
+ * 
  * /api/users  和用户有关的接口
  */
+app.use('/static',express.static('static'));
 app.use('/api/users', users);
 app.use('/api/games', games);
-
+app.use('/api/games', gamebasic);
+app.use('/api/games', gameImg);
+app.use('/api/games', gameinstall);
+app.use('/api/games', gamelog);
+app.use('/api/types', types);
+app.use('/api/articles', articles);
 /**
  * 数据库的连接
 */
@@ -59,5 +75,5 @@ mongoose.connect(db)
 /**
  * 设置端口
  */
-const port = process.env.PORT || 8081
+const port = process.env.PORT || 8085
 app.listen(port,() => {console.log('服务器启动成功')})
