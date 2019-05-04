@@ -2,9 +2,11 @@ import axios from 'axios';
 import {Domain} from './url'
 import { req } from './axiosFun';
 
+// 发送验证码接口
+export const sendcode = (data) => {return req('post',`${Domain}/api/users/code`,data)}
 
 // 注册接口(*)
-export const register = (params) => {return req('post',`${Domain}/api/users/register`,params)}
+export const register = (data) => {return req('post',`${Domain}/api/users/register`,data)}
 
 // 登录接口(*)
 export const login = (data) => {return req('post',`${Domain}/api/users/login`,data)}
@@ -76,3 +78,5 @@ export const articleadd = (data) => {return  req('post',`${Domain}/api/articles/
 
 // 删除文章
 export const articledelete = (params) => {return axios.delete(`${Domain}/api/articles/delete/${params}`)}
+
+// 类型的增加

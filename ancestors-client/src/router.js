@@ -21,6 +21,9 @@ import Screenshot from './views/Screenshot.vue'
 
 // 文章页面
 import Article from './views/Article/Article.vue'
+// 类型的页面
+import Type from './views/Article/Type.vue'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -81,6 +84,10 @@ const router = new Router({
         path: '/article',
         name: 'Article',
         component: Article
+      }, {
+        path: '/type',
+        name: 'Type',
+        component: Type
       }]
     },
     

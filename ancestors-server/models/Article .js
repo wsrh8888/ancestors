@@ -12,8 +12,8 @@ const ArticleSchema = new Schema({
     default: " "
   },
   type: {
-    type: String,
-    default: " "
+    type : String,
+    default:''
   },
   content: {
     type: String,

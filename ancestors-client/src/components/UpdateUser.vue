@@ -58,9 +58,6 @@ export default {
         email: [
           { required: true, message: "邮箱不能为空", trigger: "blur" }
         ],
-        password: [
-          { required: true, message: "密码不能为空", trigger: "blur" }
-        ],
         phone: [
           { required: true, message: "电话不能为空", trigger: "blur" }
         ],

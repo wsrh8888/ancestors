@@ -10,7 +10,7 @@
       >
         <router-link to="/home">
           <el-menu-item index="0">
-            <i class="fa fa-margin fa-server"></i>
+            <i class="fa fa-margin el-icon-menu"></i>
             <span slot="title">首页</span>
           </el-menu-item>
         </router-link>
@@ -40,7 +40,7 @@ export default {
     return {
       items: [
         {
-          icon: "fa-money",
+          icon: "el-icon-document",
           name: "游戏",
           path: "fund",
           children: [
@@ -50,15 +50,16 @@ export default {
             { path: "screenshot", name: "游戏截图" }]
         },
         {
-          icon: "fa-money",
-          name: "文章",
+          icon: "el-icon-edit-outline",
+          name: "信息",
           path: "article",
           children: [
-            { path: "article", name: "图文" }
+            { path: "type", name: "类型" },
+            { path: "article", name: "发表文章" }
           ]
         },
         {
-          icon: "fa-asterisk",
+          icon: "el-icon-setting",
           name: "信息管理",
           path: "info",
           children: [
@@ -88,6 +89,7 @@ export default {
 }
 .fa-margin {
   margin-right: 5px;
+  font-size: 20px;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 180px;

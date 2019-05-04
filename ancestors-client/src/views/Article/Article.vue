@@ -1,5 +1,6 @@
 <template>
 <div>
+<div v-if="jurisdiction">
   <div>
     <el-button style="float:right;margin:10px;margin-right:40px;" type="primary" @click="published">发表文章</el-button>
   </div>
@@ -64,6 +65,8 @@
   <Course class="isshow" :isshow="isshow" @update="getAll"></Course>
   <EditArticle class="isshow" :edit="editshow" :datas="editcontent" ></EditArticle>
 </div>
+<div v-else class="nullData">您的权限不够。请联系管理员</div>
+</div>
 </template>
 
 <script>
@@ -90,7 +93,8 @@ import Course from '../Course'
         editshow: {
           show: false
         },
-        editcontent: {}
+        editcontent: {},
+        jurisdiction: false
       }
     },
     methods: {
@@ -129,6 +133,7 @@ import Course from '../Course'
       getAll() {
         articlelist(this.user.id)
           .then(res => {
+            this.jurisdiction =  res.data.success
             if (res.data.success) {
               this.datas = res.data.data
             }
@@ -153,5 +158,11 @@ import Course from '../Course'
   margin: 0;
   width:100%;
   background: #fff;
+}
+.nullData {
+  color: #cccccc;
+  font-size: 30px;
+  text-align: center;
+  padding: 40px 0;
 }
 </style>

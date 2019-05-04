@@ -12,6 +12,8 @@ var path = require('path');
 /**
  * @author Robert
  * @name 上传一个或多个图片
+ * @method post
+ * @url /api/games/addimg
  * @return 
  *      path: 图片的路径
  */
@@ -43,6 +45,31 @@ router.post('/addimg', (req, res) => {
     res.json(result)
   });
 })
+
+/**
+ * @author Robert
+ * @name 获取游戏截图列表
+ * @method get
+ * @param  id: 用户的id
+ * @url
+ *    id  用户id
+ * @return
+ *    success: true
+ *    result  数组的集合
+ */
+router.get('/gameImg/:id'  , (req, res) => {
+  Game.find({user_id:req.params.id},['gameImg','name'])
+    .then(logs => {
+      for(var i = 0; i<logs.length;++i) {
+        for(var j=0;j<logs[i].gameImg.length;++j) {
+          logs[i].gameImg[j].url = URL + logs[i].gameImg[j].url
+        }
+      }
+      res.json({success: true,result:logs})
+    })
+}
+)
+
 
 /**
  * @author Robert
@@ -78,26 +105,6 @@ router.post('/screenshot', (req, res) => {
 })
 
 
-/**
- * @author Robert
- * @name 获取游戏截图列表
- * @param  id: 用户的id
- * @url 
- * @return
- *    success: true
- *    result  数组的集合
- */
-router.get('/gameImg/:id'  , (req, res) => {
-  Game.find({user_id:req.params.id},['gameImg','name'])
-    .then(logs => {
-      for(var i = 0; i<logs.length;++i) {
-        for(var j=0;j<logs[i].gameImg.length;++j) {
-          logs[i].gameImg[j].url = URL + logs[i].gameImg[j].url
-        }
-      }
-      res.json({success: true,result:logs})
-    })
-}
-)
+
 
 module.exports = router

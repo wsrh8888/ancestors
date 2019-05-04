@@ -3,13 +3,15 @@ var Schema = mongoose.Schema
 
 const TypeSchema = new Schema({
   // 游戏属于的类型
-  belong: {
+  name: {
     type: String,
-    default: " "
+    default: ""
   },
-  // 类型的名字
-  info: [{
-    name: String
+  children: [{
+    name: {
+      type: String,
+      default: ""
+    }
   }]
 })
 module.exports = User = mongoose.model('types',TypeSchema)

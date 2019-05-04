@@ -1,6 +1,7 @@
 <template>
-<!-- 游戏截图 -->  
-  <div>
+<!-- 游戏截图 --> 
+<div> 
+  <div v-if="jurisdiction">
     <div style="padding:20px 0;margin-left:20px;">
       <el-select v-model="gameId" placeholder="请选择">
         <el-option
@@ -33,6 +34,8 @@
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog> -->
   </div>
+  <div v-else class="nullData">您的权限不够，请联系管理员</div>
+</div>
 </template>
 
 <script>
@@ -49,7 +52,8 @@ import {addimg} from '../api/url'
         isshow: true,
         name: '修改',
         deltete: [],
-        addimgurl: ''
+        addimgurl: '',
+        jurisdiction: false
       }
     },
     methods: {
@@ -66,10 +70,13 @@ import {addimg} from '../api/url'
       getAllImg() {
         gameImg(this.user.id)
           .then(res => {
+            this.jurisdiction = res.data.success
             if (res.data.success) {
               this.imgUrl = res.data.result
-              this.showUrl = res.data.result[0].gameImg
-              this.gameId =  res.data.result[0]._id
+              if (res.data.result.length != 0) {
+                this.showUrl = res.data.result[0].gameImg
+                this.gameId =  res.data.result[0]._id
+              }
             }
           })
       },
@@ -145,3 +152,11 @@ import {addimg} from '../api/url'
     }
   }
 </script>
+<style scoped>
+.nullData {
+  color: #cccccc;
+  font-size: 30px;
+  text-align: center;
+  padding: 40px 0;
+}
+</style>

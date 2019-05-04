@@ -19,7 +19,7 @@
             <el-upload
               style="width:35%;border: 1px dashed #d9d9d9;border-radius: 6px;margin-left:20px;position: absolute;right: 40px;52px;top:-80px;"
               class="avatar-uploader"
-              action="http://127.0.0.1:8085/api/games/addlogo"
+              :action="addlogourl"
               :show-file-list="false"
               name="logo"
               :on-success="handleAvatarSuccess"
@@ -110,7 +110,7 @@ export default {
         declaration: '',
         logo: ''
       },
-      addlogourl: ''
+      addlogourl: '',
     };
   },
   created() {

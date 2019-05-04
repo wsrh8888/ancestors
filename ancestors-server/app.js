@@ -25,10 +25,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
-app.post('/test', (req,res) => {
-  res.json(req.body)
-})
-
 
 /**
  * @name 使用路由。来设置接口
@@ -55,6 +51,33 @@ app.use('/api/games', gameinstall);
 app.use('/api/games', gamelog);
 app.use('/api/types', types);
 app.use('/api/articles', articles);
+
+
+/**
+ * @name 使用session中间件
+ */
+var session = require('express-session');
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+
+var k = {
+  dxddd: 'dddddd'
+}
+app.get('/test', (req,res) => {
+  k.vcalue = '567'
+  res.json(k)
+})
+
+app.get('/test2',(req,res) => {
+  k.ll = 'wwwww'
+  res.json(k)
+})
+
+
 /**
  * 数据库的连接
 */

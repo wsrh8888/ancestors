@@ -12,8 +12,8 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "express-session": "^1.16.1",
     "formidable": "^1.2.1",
-    "gravatar": "^1.8.0",
     "images": "^3.0.2",
     "jsonwebtoken": "^8.5.0",
     "md5": "^2.2.1",
@@ -22,6 +22,8 @@
     "nodemon": "^1.18.10",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
+    "querystring": "^0.2.0",
+    "request": "^2.88.0",
     "validator": "^10.11.0"
   }
 }

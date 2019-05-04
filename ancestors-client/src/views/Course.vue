@@ -1,6 +1,10 @@
 <template>
-  <div>
-    <div class="contaniner" v-if="isshow.show">
+  <div v-if="isshow.show">
+    <div class="nullData" v-if="this.typeList.length==0">
+      请添加完类型后再次发表
+      <el-button style="margin-right:30px;position:absolute;top:20px;right:0;" type="warning" @click="cancel">返回</el-button>
+    </div>
+    <div v-else class="contaniner">
       <el-form
         ref="form"
         :model="form"
@@ -14,21 +18,20 @@
           <el-input v-model="form.author"></el-input>
         </el-form-item>
         <el-form-item prop="type" label="类型" style="flex:1;margin:0;margin-right:20px;">
-          <el-select v-model="form.type" placeholder="请选择" style="z-index:99999999;">
-            <el-option
-              v-for="item in options"
-              :key="item.type"
-              :label="item.type"
-              :value="item.type"
+          <div class="block" style="z-index:99999999;">
+            <el-cascader
+              v-model="typeValue"
+              :options="typeList"
+              :props="props"
+              :show-all-levels="false"
               style="z-index:99999999;"
               >
-            </el-option>
-          </el-select>
+            </el-cascader>
+          </div>
         </el-form-item>
           <el-button style="margin-left:10px;" type="primary" @click='submit("form")'>发表</el-button>
           <el-button style="margin-left:10px;" type="primary">添加类型</el-button>
           <el-button style="margin-right:30px;" type="error" @click="cancel">取消</el-button>
-        
       </el-form>
       <div id="father">
         <wangeditor :catchData="catchData"></wangeditor>
@@ -40,6 +43,7 @@
 <script>
 import {articleadd} from '../api/userHT'
 import wangeditor from "../components/wangeditor";
+import {typeList} from "../api/type";
 export default {
   props: {
     isshow: Object
@@ -63,6 +67,8 @@ export default {
         type: '',
         content: ""
       },
+      typeList: [],
+      typeValue: [],
       options: [{
         type: '攻略',
       },{
@@ -71,7 +77,12 @@ export default {
         type: '补丁',
       },{
         type: '常见为题',
-      }]
+      }],
+      props: {
+        value: '_id',
+        children: 'children',
+        label: 'name'
+      },
     };
   },
   methods: {
@@ -80,9 +91,9 @@ export default {
     },
     // 向后台发送文章
     submit(form) {
+      this.form.type = this.typeValue[1]
       this.$refs[form].validate(valid => {
         if (valid) {
-          // console.log(this.form)
           this.form.id = this.user.id
           articleadd(this.form)
             .then(res => {
@@ -102,7 +113,20 @@ export default {
     // 取消发表
     cancel() {
       this.isshow.show = false
+    },
+    // 获取所有的类型
+    getType() {
+      typeList(this.user.id)
+        .then(res => {
+          if (res.data.success) {
+            this.typeList = res.data.result
+          }
+        })
     }
+  },
+
+  created() {
+    this.getType();
   },
   computed: {
     user(){
@@ -115,7 +139,17 @@ export default {
 };
 </script>
 <style scoped>
+.contaniner {
+  height: 500px;
+}
 #father {
+  height: 500px;
+}
+.nullData {
+  color: #cccccc;
+  font-size: 30px;
+  text-align: center;
+  padding: 40px 0;
   height: 500px;
 }
 

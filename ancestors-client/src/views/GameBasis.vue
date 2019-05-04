@@ -1,5 +1,6 @@
 <template>
-  <div class="fillcontain">
+  <div>
+  <div class="fillcontain" v-if="jurisdiction">
     <div style="text-align:right;">
       <el-button
         size="small"
@@ -133,6 +134,8 @@
     <!-- 新增游戏 -->
     <AddGame :dialog="diadown" @update="getProfile"></AddGame>
   </div>
+  <div v-else class="nullData">您的权限不够。请联系管理员</div>
+  </div>
 </template>
 <script>
 import moduleName from '../components/DialogFound.vue';
@@ -167,7 +170,8 @@ export default {
         title: "",
         option: "edit"
       },
-      form: {}
+      form: {},
+      jurisdiction: false
     }
   },
   created() {
@@ -184,6 +188,14 @@ export default {
       //获取表格数据
         profiles(this.user.id)
         .then( res => {
+          this.jurisdiction = res.data.success
+          if (!res.data.success) {
+             this.$message({
+                message: res.data.msg,
+                type: "danger"
+            });
+            return;
+          }
           this.gameData = res.data.result
           // 设置分页数据
           this.allTableData = res.data.result;
@@ -293,6 +305,12 @@ export default {
 .pagination {
   text-align: right;
   margin-top: 10px;
+}
+.nullData {
+  color: #cccccc;
+  font-size: 30px;
+  text-align: center;
+  padding: 40px 0;
 }
 
 

@@ -11,12 +11,15 @@
           ref="registerForm"
           label-width="80px"
         >
-          <el-form-item label="邮箱" prop="email">
-            <el-input
-              type="email"
-              v-model="register.email"
-              placeholder="请输入邮箱"
-            ></el-input>
+          <el-form-item label="昵称" prop="name">
+            <el-input type="name" v-model="register.name" placeholder="请输入昵称"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号码" prop="phone">
+            <el-input type="name" v-model="register.phone" placeholder="请输入手机号码"></el-input>
+          </el-form-item>
+          <el-form-item label="验证码" prop="code" >
+            <el-input style="width:110px;float:left;" type="code" v-model="register.code" placeholder="输入验证码"></el-input>
+            <el-button :disabled="isDisabled" style="float:right;margin-left:0;" @click="sencode">{{buttonName}}</el-button>
           </el-form-item>
           <el-form-item label="密码" prop="password">
             <el-input
@@ -28,9 +31,6 @@
             <el-input
               type="password"
               v-model="register.password2" placeholder="请确认密码"></el-input>
-          </el-form-item>
-          <el-form-item label="名称" prop="name">
-            <el-input type="name" v-model="register.name" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -45,7 +45,7 @@
 </template>
 <script>
 // 接入注册api接口
-import { register } from '../api/userHT'
+import { register,sendcode } from '../api/userHT'
 export default {
   name: 'register',
   data() {
@@ -59,20 +59,24 @@ export default {
     };
     return {
       register: {
-        name: 'Robert',
-        password: '123456',
-        password2: '123456',
-        email: '751135385@qq.com'
+        name: '',
+        password: '',
+        password2: '',
+        email: '',
+        phone: '',
+        code: ''
       },
       rules: {
         // 邮箱验证
         email: [{
           required: true, 
-          message: '邮箱不能为空' 
+          message: '邮箱不能为空',
+          trigger: 'blur'
         },
         {
-          pattern:/^([0-9a-zA-Z]+)@([0-9a-z]+\.(com|cn)$)/g,
-          message: '邮箱格式不正确'
+          pattern:/^\d{8,10}@qq.com$/,
+          message: '邮箱格式不正确',
+          trigger: 'blur'
         }],
         // 名称验证
         name: [{
@@ -85,33 +89,60 @@ export default {
           message: '长度在2到30个字符之间',
           trigger: 'blur'
         }],
+        phone: [{
+          required:true, 
+          message: '电话号码不能为空'
+        }, {
+          min: 11,
+          max: 11,
+          message: '手机号码的长度为11位',
+          trigger: 'blur'
+        }, {
+          pattern: /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/,
+          message: '手机号码格式不正确',
+          trigger: 'blur'
+        }],
+        code: [{
+          required:true, 
+          message: '验证码不能为空',
+          trigger: 'blur'
+        }, {
+          min: 6,
+          max: 6,
+          message: '验证码的长度为6位',
+          trigger: 'blur'
+        }],
         // 密码验证
         password: [
         {
           required:true,
           message: '密码不能为空',
+          trigger: 'blur'
         },
         {
           min: 8,
           max: 30,
           message: "长度在8到20个字符之间",
+          trigger: 'blur'
         },
         {
-          pattern:/[a-zA-Z0-9_]{8,20}$/,
-          message: '密码必须由数字字母下划线组成8-20位数'
+          pattern:/^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?. ]).*$/,
+          message: '密码必须包含大小写字母，数字，特殊字符组成',
+          trigger: 'blur'
         }],
         // 第二次密码验证
         password2: [{
           required:true,
           message: '确认密码不能为空',
+          trigger: 'blur'
         },{
-          pattern:/[a-zA-Z0-9_]{8,20}$/,
-          message: '密码必须由数字字母下划线组成8-20位数'
-        }, {
           validator: checkPassword,
           trigger: 'blur'
         }]
-      }
+      },
+      buttonName: "发送短信",
+      isDisabled: false,
+      time: 60
     }
   },
   methods: {
@@ -121,24 +152,61 @@ export default {
         if (valid) {
           register(this.register)
           .then(res => {
-            if (!res.success) {
+            if (res.success) {
               this.$message({
-                message: res.message,
+                message: res.msg,
+                type: 'success'
+              })
+              this.$router.push("/login")
+              return;
+            } else {
+              this.$message({
+                message: res.msg,
                 type: 'error'
               })
-              return;
             }
-            this.$message({
-              message: res.message,
-              type: 'success'
-            })
-            this.$router.push("/login")
           })
         } else {
           return false;
         }
       });
-    }
+    },
+    // 发送请求获取验证码
+    sencode() {
+      if (!this.register.phone) {
+        this.$message({
+          message: '请填写手机号码',
+          type: 'error'
+        })
+        return;
+      }
+      var data = {
+        phone: this.register.phone
+      }
+      sendcode(data)
+        .then(res => {
+          if(res.success) {
+            let me = this;
+            me.isDisabled = true;
+            let interval = window.setInterval(function() {
+              me.buttonName =   me.time + '秒后重新发送';
+              --me.time;
+              if(me.time < 0) {
+                me.buttonName = "重新发送";
+                me.time = 60;
+                me.isDisabled = false;
+                window.clearInterval(interval);
+              }
+            }, 1000);
+            alert(`验证码为: ${res.msg}`)
+          } else {
+            this.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+      })
+    },
   }
 }
 </script>
@@ -151,7 +219,7 @@ export default {
   background-size: 100% 100%;
 }
 .form_container {
-  width: 370px;
+  width: 400px;
   height: 210px;
   position: absolute;
   top: 10%;

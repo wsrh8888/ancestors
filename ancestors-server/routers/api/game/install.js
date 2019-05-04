@@ -1,4 +1,5 @@
 const express = require("express")
+const passport = require('passport');
 const router = express.Router()
 const Game = require('../../../models/Game')
 
@@ -21,7 +22,7 @@ const Game = require('../../../models/Game')
  *      msg1	完整版安装说明	
  *      msg2	独立版安装说明
  */
-router.get('/downloadlist/:id', (req,res) => {
+router.get('/downloadlist/:id',passport.authenticate('jwt', { session: false }), (req,res) => {
   Game.find({user_id: req.params.id},'name install')
    .then(download => {
      res.json({success: true,result:download})

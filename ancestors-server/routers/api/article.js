@@ -7,8 +7,8 @@ var images = require('images');
 const router = express.Router()
 //导入数据库的视图
 const Article = require('../../models/Article ')
-
-
+const Type = require('../../models/Type')
+const User = require('../../models/User')
 /**
  * @author Robert
  * @name 上传一个或多个图片到服务器
@@ -58,9 +58,9 @@ router.post('/addimg', (req, res) => {
  * @data 
  *    title   文章的标题
  *    author  文章的作者
- *    type    文章的类型
+ *    type    文章的类型id
  *    content 文章的内容
- *    user_id 发布者的id
+ *    id      发布者的id
  * @return 
  *      success: true
  *      msg: '添加成功'
@@ -87,7 +87,7 @@ router.post('/add', (req, res) => {
  * @method get
  * @url /api/articles/all/:id
  * @param id 用户的id
- * return  [{}]
+ * @returns  [{}]
  *    author:   文章作者
  *    content:  文章内容
  *    date:     文章的发表时间
@@ -97,10 +97,38 @@ router.post('/add', (req, res) => {
  *    _id: "5cc9c2e25e12333c60f1de76"
  */
 router.get('/all/:id', (req, res) => {
-  Article.find({user_id: req.params.id})
-    .then(data => {
-      res.json({success: true,data})
-    })
+  User.findOne({_id: req.params.id})
+    .then(user => {
+      if (user.grade == 0) {
+        res.json({success: false, msg: '您的权限不够'})
+      } else {
+        Article.find({user_id: req.params.id})
+          .then(data => {
+            var datas = data
+            Type.find()
+              .then(type => {
+                for(i=0;i<datas.length;++i){
+                  type.forEach(ele => {
+                    ele.children.forEach(key => {
+                      if (key._id = datas[i].type){
+                        data[i].type = key.name
+                      }
+                    })
+                  })
+                }
+                res.json({success: true,data})
+              })
+          })
+            }
+          })
+  // Article.find()
+  //   .populate({
+  //     path: 'type'
+  //   })
+  //   .exec((err,data) => {
+  //     console.log(data)
+  //     console.log(err)
+  //   })
 })
 
 
@@ -111,7 +139,7 @@ router.get('/all/:id', (req, res) => {
  * @method delete
  * @url /api/articles/delete/:id
  * @param id 文章的id
- * return  [{}]
+ * @returns 
  *    success:   
  *    msg: 
  */

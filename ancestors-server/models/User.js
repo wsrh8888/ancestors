@@ -15,11 +15,12 @@ const UserSchema = new Schema({
     default: '未绑定邮箱'
   },
   phone: {
-    type: Number,
-    default:null
+    type: String,
+    default: ''
   },
   avatar: {
-    type: String
+    type: String,
+    default: 'static/img/user/logo.jpg'
   },
   grade: {
     type: Number,

@@ -10,8 +10,8 @@
           class="loginForm"
           label-width="60px"
         >
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="login.email" placeholder="请输入邮箱"></el-input>
+          <el-form-item label="账号" prop="email">
+            <el-input v-model="login.email" placeholder="请输入手机号码或邮箱"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
             <el-input v-model="login.password" placeholder="请输入密码" type="password"></el-input>
@@ -40,31 +40,33 @@ export default {
   data() {
     return {
       login: {
-        email: "751135385@qq.com",
-        password: "123456"
+        email: "",
+        password: ""
       },
       rules: {
         email: [
           {
-            type: "email",
             required: true,
-            message: "邮箱格式不正确",
+            message: "请输入账号",
             trigger: "blur"
           },
           {
-            pattern:/^([0-9a-zA-Z_]+)@([0-9a-z]+\.(com|cn)$)/g,
-            message: '邮箱格式不正确'
+            pattern:/^(([0-9a-zA-Z_]+)@([0-9a-z]+\.(com|cn))|(((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8})$)/g,
+            message: '账号格式不正确',
+            trigger: "blur"
           }
         ],
         password: [
           {
             required: true,
             message: "密码不能为空",
+            trigger: "blur"
           },
           {
             min: 6,
             max: 30,
             message: "长度在8到20个字符之间",
+            trigger: "blur"
           },
         ]
       }
@@ -78,7 +80,7 @@ export default {
           login(this.login).then(res => {
             if (!res.success) {
               this.$message({
-                message: res.message,
+                message: res.msg,
                 type: 'error'
               })
               return;

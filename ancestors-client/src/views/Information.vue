@@ -95,6 +95,7 @@ import UpdateUser from '../components/UpdateUser.vue';
       },
       // 修改用户接口
       handleEdit(index,row) {
+        row.password = ''
         this.dialog = {
           show: true,
           title: "修改用户信息",
