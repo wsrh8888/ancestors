@@ -10,16 +10,17 @@
           class="registerForm"
           ref="registerForm"
           label-width="80px"
+          :validate-on-rule-change="false"
         >
           <el-form-item label="昵称" prop="name">
             <el-input type="name" v-model="register.name" placeholder="请输入昵称"></el-input>
           </el-form-item>
-          <el-form-item label="手机号码" prop="phone">
+          <el-form-item label="手机号码" prop="phone" ref="registerPhone">
             <el-input type="name" v-model="register.phone" placeholder="请输入手机号码"></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="code" >
             <el-input style="width:110px;float:left;" type="code" v-model="register.code" placeholder="输入验证码"></el-input>
-            <el-button :disabled="isDisabled" style="float:right;margin-left:0;" @click="sencode">{{buttonName}}</el-button>
+            <el-button :disabled="isDisabled" style="float:right;margin-left:0;" @click="sencode('registerForm')">{{buttonName}}</el-button>
           </el-form-item>
           <el-form-item label="密码" prop="password">
             <el-input
@@ -172,41 +173,41 @@ export default {
       });
     },
     // 发送请求获取验证码
-    sencode() {
-      if (!this.register.phone) {
-        this.$message({
-          message: '请填写手机号码',
-          type: 'error'
-        })
-        return;
-      }
-      var data = {
-        phone: this.register.phone
-      }
-      sendcode(data)
-        .then(res => {
-          if(res.success) {
-            let me = this;
-            me.isDisabled = true;
-            let interval = window.setInterval(function() {
-              me.buttonName =   me.time + '秒后重新发送';
-              --me.time;
-              if(me.time < 0) {
-                me.buttonName = "重新发送";
-                me.time = 60;
-                me.isDisabled = false;
-                window.clearInterval(interval);
-              }
-            }, 1000);
-            alert(`验证码为: ${res.msg}`)
-          } else {
-            this.$message({
-              message: res.msg,
-              type: 'error'
-            })
+    sencode(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          var data = {
+            phone: this.register.phone
           }
+          sendcode(data)
+            .then(res => {
+              if(res.success) {
+                let me = this;
+                me.isDisabled = true;
+                let interval = window.setInterval(function() {
+                  me.buttonName =   me.time + '秒后重新发送';
+                  --me.time;
+                  if(me.time < 0) {
+                    me.buttonName = "重新发送";
+                    me.time = 60;
+                    me.isDisabled = false;
+                    window.clearInterval(interval);
+                  }
+                }, 1000);
+                this.$message({
+                  message: res.msg,
+                  type: 'success'
+                })
+              } else {
+                this.$message({
+                  message: res.msg,
+                  type: 'error'
+                })
+              }
+          })
+        }
       })
-    },
+    }
   }
 }
 </script>

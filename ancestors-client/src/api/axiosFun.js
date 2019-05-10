@@ -51,7 +51,9 @@ const req = (method, url, params) => {
         return ret
       }
     ]
-  }).then(res => res.data);
+  }).then(res =>{ 
+    return res.data
+  });
 };
 
 export {

@@ -1,4 +1,5 @@
 // 地址
+// export const Domain = 'http://www.xlmx.xyz:8085'
 export const Domain = 'http://127.0.0.1:8085'
 
 // 用户上传的游戏logo
